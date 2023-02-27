@@ -23,6 +23,7 @@ export class ViewWorkOrderComponent implements OnInit {
   allWorks!: Work[];
   allWorksMap = new Map();
   editing:boolean = false;
+  globalTotal:number = 0.0;
 
   constructor(private worksService: WorksService, public dialog: MatDialog, private workOrderService: WorkOrdersService) { }
 
@@ -30,6 +31,7 @@ export class ViewWorkOrderComponent implements OnInit {
     this.getAllWorks();
     this.worksService.getWorksByWOrkOrder(this.workOrder.id.toString()).subscribe(success=>{
       this.worksByOrder=success;
+      this.calculateGlobalTotal();
     }, error=>{
 
     });
@@ -151,6 +153,16 @@ export class ViewWorkOrderComponent implements OnInit {
     });
   }
 
+  calculateGlobalTotal():void{
+
+    //falta agregar al calculo las refacciones
+
+    this.worksByOrder.forEach((work)=>{
+      this.globalTotal += work.total;
+      console.log(work.total);
+    })
+  }
+
   addWorkToWorkOrder(selectedWork:Work,comments:string, numHours:number, total:number) {
     var request: WorkByWorkOrderRequest = {
       NumeroHoras:numHours,
@@ -166,6 +178,7 @@ export class ViewWorkOrderComponent implements OnInit {
     console.log("Request",request);
     this.worksService.addWorkToWorkOrder(request).subscribe(success=>{
       this.worksByOrder.push(success);
+      this.calculateGlobalTotal();
     }, error=>{
 
     })
