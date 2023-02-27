@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  sapServiceBaseUrl:  "https://47b6-2604-4500-0-2ee-4c5-a9fe-56c8-9d1d.ngrok.io/",
+  reportsServiceBaseUrl: "http://localhost:8081/"
 };
 
 /*

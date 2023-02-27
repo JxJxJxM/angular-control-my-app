@@ -1,0 +1,210 @@
+<div class="card">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-5 card">
+            <div class="card-body">
+                <div class="card-title">
+                    <span> Crear vale </span>
+                </div>
+                <form [formGroup]="options" class="container">
+                    <div class="row">
+
+                       <div class="col-md-12">
+                         <!----    <mat-form-field appearance="fill"
+                                [hideRequiredMarker]="hideRequiredControl.value"
+                                [floatLabel]="getFloatLabelValue()">
+                                <mat-select [(value)]="selectedUnidad" (selectionChange)="changeUnidad()">
+                                    <mat-option *ngFor="let unidad of unidades" [value]="unidad">
+                                        {{unidad.itemname}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-label>Unidad</mat-label>
+                            </mat-form-field>--->
+
+
+                            <mat-form-field class="example-full-width" appearance="fill">
+                                <mat-label>Unidad</mat-label>
+                                <input type="text"
+                                       placeholder="Selecciona Unidad"
+                                       aria-label="Unidad"
+                                       [formControl]="autoCompControl"
+                                       matInput
+                                       [matAutocomplete]="auto" 
+                                       >
+                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectUnidadOption($event)" [displayWith]="getOptionTextUnidades">
+                                  <mat-option *ngFor="let unidad of filteredUnidades | async" [value]="unidad">
+                                    {{unidad.itemname}}
+                                  </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+
+                        </div>
+    
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <mat-form-field appearance="fill"
+                                [hideRequiredMarker]="hideRequiredControl.value"
+                                [floatLabel]="getFloatLabelValue()">
+                                <mat-label>Operador</mat-label>
+                                <input matInput placeholder="Operador" readonly [value]="selectedUnidad.operador" (change)="operadorUpdated($event)">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field appearance="fill"
+                                [hideRequiredMarker]="hideRequiredControl.value"
+                                [floatLabel]="getFloatLabelValue()">
+                                <mat-select [(value)]="empresaSelected" (selectionChange)="confirmDifferentCompanyForUnit()">
+                                    <mat-option *ngFor="let empresa of empresas" [value]="empresa.id">
+                                        {{empresa.name}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-label>Empresa</mat-label>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
+                                <mat-label>Litros a solicitar (L)</mat-label>
+                                <input matInput placeholder="L" [value]="litrosSolicitados" (change)="litrosUpdated($event)" [formControl]="litrosSolicitadosControl" [errorStateMatcher]="matcher">
+                                <mat-error *ngIf="litrosSolicitadosControl.hasError('pattern') && !litrosSolicitadosControl.hasError('required')">
+                                    Favor de solo introducir numeros
+                                </mat-error>
+                                <mat-error *ngIf="litrosSolicitadosControl.hasError('required')">
+                                    Este es un <strong>campo requerido</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
+                                <mat-label>Odometro inicial (Km)</mat-label>
+                                <input matInput placeholder="Km" [value]="odometroInicial" (keyup)="kmInicialUpdated($event)" [formControl]="kmInicialControl" [errorStateMatcher]="matcher">
+                                <mat-error *ngIf="kmInicialControl.hasError('pattern') && !kmInicialControl.hasError('required')">
+                                    Favor de solo introducir numeros con este formato (0-9).(0-9)
+                                </mat-error>
+                                <mat-error *ngIf="kmInicialControl.hasError('required')">
+                                    Este es un <strong>campo requerido</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-4">
+                            <mat-form-field *ngIf="tipoVale=='OC'" class="example-full-width" appearance="fill">
+                                <mat-label>Proveedor</mat-label>
+                                <input type="text"
+                                       placeholder="Selecciona Proveedor"
+                                       aria-label="Proveedor"
+                                       [formControl]="proveedorCompControl"
+                                       matInput
+                                       [matAutocomplete]="autoPro" 
+
+                                       [errorStateMatcher]="matcher"
+                                       >
+                                <mat-autocomplete #autoPro="matAutocomplete" (optionSelected)="selectProveedorOption($event)" [displayWith]="getOptionTextProveedor">
+                                  <mat-option *ngFor="let proveedor of filteredProveedores | async" [value]="proveedor">
+                                    {{proveedor.cardName}}
+                                  </mat-option>
+                                </mat-autocomplete>
+                                <mat-error *ngIf="kmInicialControl.hasError('required')">
+                                    Este es un <strong>campo requerido</strong>
+                                </mat-error>
+                            </mat-form-field>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row"> 
+
+                        <!---<div *ngIf="empresaSelected!=3" class="col-md-6">
+                            <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
+                                <mat-label>Tipo de vale</mat-label>
+                                <input matInput [value]="tipoVale" readonly>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-6" *ngIf="empresaSelected==3">
+                            <mat-form-field  appearance="fill"
+                                [hideRequiredMarker]="hideRequiredControl.value"
+                                [floatLabel]="getFloatLabelValue()">
+                                <mat-select [(value)]="selectedVoucher" (selectionChange)="changeVoucherType()">
+                                    <mat-option *ngFor="let type of voucherTypes" [value]="type">
+                                        {{type.name}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-label>Tipo de vale</mat-label>
+                            </mat-form-field>
+                        </div>
+                    -->
+                    <div class="col-md-6" >
+                        <mat-form-field  appearance="fill"
+                            [hideRequiredMarker]="hideRequiredControl.value"
+                            [floatLabel]="getFloatLabelValue()">
+                            <mat-select [(value)]="selectedVoucher" (selectionChange)="changeVoucherType()">
+                                <mat-option *ngFor="let type of voucherTypes" [value]="type">
+                                    {{type.name}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-label>Tipo de vale</mat-label>
+                        </mat-form-field>
+                    </div>
+
+                        <div class="col-md-6">
+                            <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
+                                <mat-label>Sucursal</mat-label>
+                                <input matInput placeholder="Sucursal" readonly [value]="selectedUnidad.sucursal" (change)="sucursalUpdated($event)">
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row"> 
+
+                        <div *ngIf="tipoVale=='AA'" class="col-md-12">
+                            <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
+                                <mat-label>Stock Diesel</mat-label>
+                                <input matInput readonly [value]="stockAutoabasto">
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <mat-form-field appearance="fill" [floatLabel]="getFloatLabelValue()">
+                                <mat-label>Comentarios</mat-label>
+                                <input matInput [value]="comentariosBox" (change)="onUpdatedComments($event)">
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4" ><mat-checkbox (change)="onChangeTanqueLleno($event.checked)">Tanque lleno</mat-checkbox></div>
+                        </div>
+                    </div>
+
+                    
+                </form>
+            </div>
+            <button style="text-align: center;" type="button" class="btn btn-primary" (click)="openDialog()">
+                <span *ngIf="!creando">
+                    Crear
+                </span>
+                <span>
+                    <mat-spinner style="margin:0 auto;" [diameter]="30" *ngIf="creando" color="warn"></mat-spinner>
+                </span>
+            </button>
+        </div>
+    
+        <div class="col-md-7 card">
+            <app-view-quick-history [vales]="latestVales"></app-view-quick-history>
+        </div>
+    </div>
+  </div>
+</div>

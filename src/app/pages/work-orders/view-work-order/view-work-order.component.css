@@ -1,0 +1,15 @@
+.card {
+    width: 100%;
+}
+
+.createdClass {
+    color: blue !important;
+}
+
+.startedClass {
+    color:green !important;
+}
+
+.doneClass {
+    color:red !important;
+}
