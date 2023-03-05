@@ -7,6 +7,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { TableUtil } from 'src/app/services/TableUtil';
+import { FormControl, FormGroup } from '@angular/forms';
 
 
 
@@ -52,7 +53,14 @@ export class WorkOrdersComponent implements OnInit {
     {value: 3, viewValue: 'Correctivo'},
     {value: 4, viewValue:'Preventivo'}
   ];
-  workOrderStopTypeFilter = "";
+  workOrderStopTypeFilter = "Todos";
+
+
+  range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
+
 
 
   unitName!:String;
@@ -96,6 +104,7 @@ export class WorkOrdersComponent implements OnInit {
     this.filterBySucursal();
     this.filterByworkOrderType();
     this.filterByworkOrderStopType();
+    this.filterByDateRange();
     
     //datasource para la lista
     this.dataSource = new MatTableDataSource<WorkOrder>(this.filteredWorkOrders);
@@ -106,7 +115,7 @@ export class WorkOrdersComponent implements OnInit {
   filterBySucursal(): void {
     console.log("filtrando por sucursal", this.sucursalName);
     if(this.sucursalName==undefined || this.sucursalName.trim().length==0 ) {
-      console.log("Original filter");
+      console.log("SIn filtro sucursal", this.filteredWorkOrders);
       this.filteredWorkOrders=this.filteredWorkOrders;
     
     } else {
@@ -140,7 +149,7 @@ export class WorkOrdersComponent implements OnInit {
   filterByworkOrderType(): void {
     console.log("tye selected", this.workOrderTypeFilter);
     if(this.workOrderTypeFilter!="Todas") {
-      console.log("filtering by type ");
+      console.log("");
       this.filteredWorkOrders = this.filteredWorkOrders.filter((workOrder)=>{
         return workOrder.tipo==this.workOrderTypeFilter;
       });
@@ -175,6 +184,27 @@ export class WorkOrdersComponent implements OnInit {
     this.workOrderStopTypeFilter=event.value;
     console.log("AJASJJASJA", event);
     this.filterVales();
+  }
+
+
+  filterByDateRange(): void {
+    if(this.range.value.start!=undefined&&this.range.value.end!=undefined){
+      let startDate = this.range.value.start;
+      let endDate = this.range.value.end;
+      this.filteredWorkOrders = this.filteredWorkOrders.filter((workOrder)=>{
+        let voucherDate = new Date(workOrder.timestamp.toString());
+        voucherDate = new Date(voucherDate.toDateString());
+        if(voucherDate>=startDate && voucherDate<=endDate){
+          
+          return true;
+        } else {return false;}
+      })
+    }
+    if(this.range.value.start==undefined || this.range.value.end==undefined){
+      console.log("Revirtiendo filtro fecha");
+      this.filteredWorkOrders = this.filteredWorkOrders;
+    }
+    
   }
 
   
