@@ -1,9 +1,0 @@
-.mat-row:hover .mat-cell {
-    border-color: currentColor;
-    font-weight: bold;
-    background-color:darkgray;
-}
-
-.unidadName {
-    max-width: 250px;
-}

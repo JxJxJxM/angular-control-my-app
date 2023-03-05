@@ -16,7 +16,7 @@
             <a class="nav-link" *ngIf="isAuthenticated()" [ngClass]="{'active': unidadesActive}" (click)="onUnidades()" >Unidades</a>
           </li>
 
-          <!---
+          
           <li class="nav-item">
             <a class="nav-link" *ngIf="isAuthenticated()" [ngClass]="{'active': workOrdersActive}" (click)="onWorkOrders()">Ordenes de servicio</a>
           </li>
@@ -24,7 +24,7 @@
           <li class="nav-item">
             <a class="nav-link" *ngIf="isAuthenticated()" [ngClass]="{'active': laborActive}" (click)="onLabor()">Mano de obra</a>
           </li>
-          -->
+        
 
           <li class="nav-item">
             <a class="nav-link" *ngIf="isAuthenticated() && hasRole('A')" [ngClass]="{'active': usersActive}" (click)="onUsers()">Usuarios</a>

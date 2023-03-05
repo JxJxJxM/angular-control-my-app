@@ -1,54 +1,100 @@
+<div class="container-fluid">
+  <div class="row">
+
+  
+  <div class="col-md-4">
+      <div class="input-group">
+        <span class="input-group-text">Filtro por campos</span>
+        <div class="form-floating">
+          <input type="text" class="form-control" id="floatingInputGroup1" placeholder="Filtro por campos" [(ngModel)]="unitName" (ngModelChange)="filterVales()">
+          <label for="floatingInputGroup1">Filtro</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="floatingInputGroup1" placeholder="Nombre sucursal" [(ngModel)]="sucursalName" (ngModelChange)="filterVales()">
+            <label for="floatingInputGroup1">Sucursal</label>
+        </div>
+        &nbsp;
+        <button style="text-align: center;" type="button" class="btn btn-primary" (click)="createWorkOrder()">Crear</button>
+        &nbsp;
+        <button style="text-align: center;" type="button" class="btn btn-primary" (click)="exportTable()">Exportar</button>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <mat-form-field appearance="fill">
+        <mat-label>Tipo de orden</mat-label>
+        <mat-select (selectionChange)="onChangeWorkOrderTypeFilter($event)">
+          <mat-option *ngFor="let type of workOrderTypes" [value]="type.viewValue">
+            {{type.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Tipo de paro</mat-label>
+        <mat-select (selectionChange)="onChangeWorkOrderStopTypeFilter($event)">
+          <mat-option *ngFor="let type of workOrderStopTypes" [value]="type.viewValue">
+            {{type.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
 
 <div class="card">
-    <table mat-table
-       [dataSource]="dataSource" multiTemplateDataRows
-       class="mat-elevation-z8">
-  <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-    <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-    
-    <td mat-cell *matCellDef="let element"> 
-      <div *ngIf="column!='timestamp'">
-        {{element[column]}} 
-      </div>
-      <div *ngIf="column=='timestamp'">
-        {{element[column] | date: 'dd/MM/yyyy'}}
-      </div>
-    </td>
-    
-  </ng-container>
-  <ng-container matColumnDef="expand">
-    <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
-    <td mat-cell *matCellDef="let element">
-      <button *ngIf="element.status=='Creada'" matBadge="N" matBadgeOverlap="false" matBadgeSize="small" matBadgeColor="warn" mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
-        <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
-        <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
-      </button>
 
-      <button *ngIf="element.status!='Creada'"  mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
-        <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
-        <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
-      </button>
+  <table mat-table
+        [dataSource]="dataSource" multiTemplateDataRows
+        class="mat-elevation-z8">
+        
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+      <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+      
+      <td mat-cell *matCellDef="let element"> 
+        <div *ngIf="column!='timestamp'">
+          {{element[column]}} 
+        </div>
+        <div *ngIf="column=='timestamp'">
+          {{element[column] | date: 'dd/MM/yyyy'}}
+        </div>
+      </td>
+      
+    </ng-container>
+    <ng-container matColumnDef="expand">
+      <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+      <td mat-cell *matCellDef="let element">
+        <button *ngIf="element.status=='Creada'" matBadge="N" matBadgeOverlap="false" matBadgeSize="small" matBadgeColor="warn" mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+          <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+          <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+        </button>
 
-    </td>
-  </ng-container>
+        <button *ngIf="element.status!='Creada'"  mat-icon-button aria-label="expand row" (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+          <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+          <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+        </button>
 
-  <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-  <ng-container matColumnDef="expandedDetail">
-    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
-      <div class="example-element-detail"
-           [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-            <app-view-work-order  [workOrder]="element"></app-view-work-order>
-      </div>
-    </td>
-  </ng-container>
+      </td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
-  <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
-      class="example-element-row"
-      [class.example-expanded-row]="expandedElement === element"
-      (click)="expandedElement = expandedElement === element ? null : element">
-  </tr>
-  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
-</table>
-    <button style="text-align: center;" type="button" class="btn btn-primary" (click)="createWorkOrder()">Crear</button>
+    <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+    <ng-container matColumnDef="expandedDetail" matSort (matSortChange)="announceSortChange($event)">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+        <div class="example-element-detail"
+            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+              <app-view-work-order  [workOrder]="element"></app-view-work-order>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[10, 20, 30]"
+       showFirstLastButtons 
+       aria-label="Seleccione pagina de vales">
+  </mat-paginator>
 </div>

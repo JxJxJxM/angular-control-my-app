@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  sapServiceBaseUrl:  "https://47b6-2604-4500-0-2ee-4c5-a9fe-56c8-9d1d.ngrok.io/",
+  sapServiceBaseUrl:  "https://4f4a-2604-4500-0-2ee-4c5-a9fe-56c8-9d1d.ngrok.io/",
   reportsServiceBaseUrl: "http://localhost:8081/"
 };
 
