@@ -56,6 +56,16 @@ export class WorkOrdersComponent implements OnInit {
   workOrderStopTypeFilter = "Todos";
 
 
+  workOrderStatusTypes= [
+    {value: 1, viewValue: 'Todos'},
+    {value: 2, viewValue: 'Creada'},
+    {value: 3, viewValue:'Iniciada'},
+    {value: 4, viewValue: 'Finalizada'},
+    {value: 5, viewValue:'Cancelada'}
+  ];
+  workOrderStatusFilter = "Todos";
+
+
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
@@ -104,8 +114,10 @@ export class WorkOrdersComponent implements OnInit {
     this.filterBySucursal();
     this.filterByworkOrderType();
     this.filterByworkOrderStopType();
+    this.filterByStatus();
     this.filterByDateRange();
-    
+  
+
     //datasource para la lista
     this.dataSource = new MatTableDataSource<WorkOrder>(this.filteredWorkOrders);
     this.dataSource.paginator = this.paginator;
@@ -183,6 +195,27 @@ export class WorkOrdersComponent implements OnInit {
   onChangeWorkOrderStopTypeFilter(event: any): void {
     this.workOrderStopTypeFilter=event.value;
     console.log("AJASJJASJA", event);
+    this.filterVales();
+  }
+
+
+  filterByStatus(): void {
+    console.log("tye selected", this.workOrderStatusFilter);
+    console.log(this.filteredWorkOrders);
+    if(this.workOrderStatusFilter!="Todos") {
+      console.log("filtering by status ");
+      this.filteredWorkOrders = this.filteredWorkOrders.filter((workOrder)=>{
+        return workOrder.status==this.workOrderStatusFilter;
+      });
+      console.log(this.filteredWorkOrders);
+    } else {
+      console.log("returning");
+      this.filteredWorkOrders=this.filteredWorkOrders;
+    }
+  }
+
+  onChangeStatusFilter(event: any): void {
+    this.workOrderStatusFilter=event.value;
     this.filterVales();
   }
 

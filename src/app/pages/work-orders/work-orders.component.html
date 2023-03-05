@@ -54,6 +54,15 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Status</mat-label>
+        <mat-select (selectionChange)="onChangeStatusFilter($event)">
+          <mat-option *ngFor="let type of workOrderStatusTypes" [value]="type.viewValue">
+            {{type.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
 </div>
